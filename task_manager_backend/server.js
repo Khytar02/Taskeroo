@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const sequelize = require('./config/database'); // Import Sequelize instance
 const User = require('./models/User'); // Import User model
 const authRoutes = require('./routes/authRoutes'); // Import authentication routes
+const clockRoutes = require('./routes/clockRoutes'); // Import clock routes
 
 // Load environment variables from .env file
 dotenv.config();
@@ -21,6 +22,8 @@ app.get('/', (req, res) => {
 
 // Use authentication routes
 app.use('/api/auth', authRoutes);
+
+app.use('/api/clock', clockRoutes);
 
 // Set the port from environment variable or default to 5000
 const PORT = process.env.PORT || 5000;
