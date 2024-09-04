@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { blacklistToken } = require('../middleware/tokenBlacklist');
 
 // User registration
 exports.register = async (req, res) => {
@@ -61,6 +62,21 @@ exports.login = async (req, res) => {
     console.error('Error during login:', err.message);
     res.status(500).send('Server error');
   }
+};
+
+
+// User logout
+exports.logout = (req, res) => {
+  const token = req.header('x-auth-token');
+  
+  if (!token) {
+    return res.status(400).json({ msg: 'No token provided' });
+  }
+
+  // Add the token to the blacklist
+  blacklistToken(token);
+
+  res.json({ msg: 'Logged out successfully' });
 };
 
   
