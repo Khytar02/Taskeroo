@@ -12,7 +12,7 @@ router.post(
   [
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Password must be at least 6 characters').isLength({ min: 6 }),
+    check('password', 'Password must be at least 6 characters').isLength({ min: 8 }),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -38,6 +38,13 @@ router.post(
     await authController.login(req, res);
   }
 );
+
+// Logout route
+router.post(
+  '/logout', authMiddleware, (req, res) => {
+  authController.logout(req, res);
+});
+
 
 // Admin-only route
 router.get('/admin', authMiddleware, roleMiddleware('admin'), (req, res) => {
