@@ -1,6 +1,8 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 const authController = require('../controllers/authController');
+const authMiddleware = require('../middleware/authMiddleware');
+const roleMiddleware = require('../middleware/roleMiddleware');
 
 const router = express.Router();
 
@@ -36,5 +38,10 @@ router.post(
     await authController.login(req, res);
   }
 );
+
+// Admin-only route
+router.get('/admin', authMiddleware, roleMiddleware('admin'), (req, res) => {
+  res.json({ msg: 'Welcome, Admin!' });
+});
 
 module.exports = router;
