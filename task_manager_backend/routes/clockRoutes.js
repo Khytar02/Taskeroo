@@ -1,5 +1,5 @@
 const express = require('express');
-const clockController = require('../controllers/attendanceController');
+// const clockController = require('../controllers/attendanceController');
 const authMiddleware = require('../middleware/authMiddleware'); // Ensure user is authenticated
 
 const router = express.Router();

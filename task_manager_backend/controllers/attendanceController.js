@@ -1,5 +1,3 @@
-// controllers/attendanceController.js
-
 const Attendance = require('../models/Attendance');
 
 // Clock in for a work shift (not tied to a project or task)

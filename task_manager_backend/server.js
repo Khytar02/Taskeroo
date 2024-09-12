@@ -5,7 +5,7 @@ const sequelize = require('./config/database'); // Import Sequelize instance
 const User = require('./models/User'); // Import User model
 const authRoutes = require('./routes/authRoutes'); // Import authentication routes
 const clockRoutes = require('./routes/clockRoutes'); // Import clock routes
-const approvalRoutes = require('./routes/approvalRoutes');
+//const approvalRoutes = require('./routes/approvalRoutes');
 const timeTrackingRoutes = require('./routes/timeTrackingRoutes'); // Import the time tracking routes
 
 
@@ -26,11 +26,11 @@ app.get('/', (req, res) => {
 // Use authentication routes
 app.use('/api/auth', authRoutes);
 
-app.use('/api/clock', clockRoutes);
+ //app.use('/api/clock', clockRoutes);
 
-app.use('/api/approvals', approvalRoutes);
+//app.use('/api/approvals', approvalRoutes);
 
-app.use('/api/time', timeTrackingRoutes);
+//app.use('/api/time', timeTrackingRoutes);
 
 // Set the port from environment variable or default to 5000
 const PORT = process.env.PORT || 5000;
