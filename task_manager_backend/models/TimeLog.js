@@ -1,6 +1,8 @@
+// models/TimeLog.js
+
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const TaskTime = require('./TaskTime'); // Import the TaskTime model
+const TimeEntry = require('./TimeEntry');
 
 const TimeLog = sequelize.define('TimeLog', {
   id: {
@@ -8,29 +10,26 @@ const TimeLog = sequelize.define('TimeLog', {
     primaryKey: true,
     autoIncrement: true,
   },
-  taskId: {
+  timeEntryId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
     references: {
-      model: TaskTime,
+      model: TimeEntry,
       key: 'id',
     },
     onDelete: 'CASCADE',
   },
-  startTime: {
+  logDetails: {
+    type: DataTypes.STRING,
+    allowNull: true, // Details of the log entry, if necessary
+  },
+  createdAt: {
     type: DataTypes.DATE,
     allowNull: false,
+    defaultValue: DataTypes.NOW,
   },
-  endTime: {
-    type: DataTypes.DATE,
-    allowNull: true, // Will remain null until time tracking stops
-  },
-}, {
-  timestamps: true,
 });
 
-// Set up the relationship between TaskTime and TimeLog
-TaskTime.hasMany(TimeLog, { foreignKey: 'taskId' });
-TimeLog.belongsTo(TaskTime);
+TimeEntry.hasMany(TimeLog, { foreignKey: 'timeEntryId' });
+TimeLog.belongsTo(TimeEntry, { foreignKey: 'timeEntryId' });
 
 module.exports = TimeLog;

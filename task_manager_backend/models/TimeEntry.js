@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const User = require('./User'); // Import User model to establish relationship
+const Project = require('./Project');
+const Task = require('./Task');
 
 const TimeEntry = sequelize.define('TimeEntry', {
   id: {
@@ -8,24 +9,38 @@ const TimeEntry = sequelize.define('TimeEntry', {
     primaryKey: true,
     autoIncrement: true,
   },
-  userId: {
+  projectId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true, // Time can be tracked for a project or task
     references: {
-      model: User,
-      key: 'id'
-    }
+      model: Project,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
   },
-  clockInTime: {
+  taskId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    references: {
+      model: Task,
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
+  },
+  startTime: {
     type: DataTypes.DATE,
-    allowNull: true, // Initially null until user clocks in
+    allowNull: false,
   },
-  clockOutTime: {
+  endTime: {
     type: DataTypes.DATE,
-    allowNull: true, // Initially null until user clocks out
+    allowNull: true, // If null, time tracking is still ongoing
   },
-}, {
-  timestamps: true // Automatically adds createdAt and updatedAt fields
 });
+
+Project.hasMany(TimeEntry, { foreignKey: 'projectId' });
+Task.hasMany(TimeEntry, { foreignKey: 'taskId' });
+
+TimeEntry.belongsTo(Project, { foreignKey: 'projectId' });
+TimeEntry.belongsTo(Task, { foreignKey: 'taskId' });
 
 module.exports = TimeEntry;
