@@ -2,7 +2,7 @@ const Task = require('../models/Task');
 
 // Fetch all tasks for a project
 exports.getTasks = async (req, res) => {
-  const { projectId } = req.params;
+  const { projectId } = req.query; // Use query params instead of route params
   try {
     const tasks = await Task.findAll({ where: { projectId } });
     res.status(200).json(tasks);
