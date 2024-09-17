@@ -1,22 +1,45 @@
 const Task = require('../models/Task');
 
-// Fetch all tasks for a project
-exports.getTasks = async (req, res) => {
-  const { projectId } = req.query; // Use query params instead of route params
+exports.createTask = async (req, res) => {
+  
+  const { projectId, name, description, userId } = req.body;
+  if (!projectId || !name) {
+    return res.status(400).json({ error: 'Project ID and Task name are required.' });
+  }
+
   try {
-    const tasks = await Task.findAll({ where: { projectId } });
-    res.status(200).json(tasks);
+    const taskData = {
+      projectId,
+      name,
+      description
+    };
+
+    // Only include userId if it's provided
+    if (userId) {
+      taskData.userId = userId;
+    }
+
+    const task = await Task.create(taskData);
+    res.status(201).json(task);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Create a task
-exports.createTask = async (req, res) => {
-  const { projectId, name, description } = req.body;
+// Fetch all tasks for a project
+exports.getTasks = async (req, res) => {
+  const { projectId } = req.query;  // Extract projectId from query parameters
+
   try {
-    const task = await Task.create({ projectId, name, description });
-    res.status(201).json(task);
+    let tasks;
+    if (projectId) {
+      tasks = await Task.findAll({
+        where: { projectId }
+      });
+    } else {
+      tasks = await Task.findAll(); // Return all tasks if no projectId is provided
+    }
+    res.status(200).json(tasks);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

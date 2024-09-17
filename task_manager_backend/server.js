@@ -1,5 +1,6 @@
 // Import necessary modules
 const express = require('express');
+const app = express();
 const dotenv = require('dotenv');
 const sequelize = require('./config/database'); // Import Sequelize instance
 const User = require('./models/User'); // Import User model
@@ -9,15 +10,14 @@ const projectRoutes = require('./routes/projectRoutes'); // Import project route
 const taskRoutes = require('./routes/taskRoutes'); // Import task routes
 const timeTrackingRoutes = require('./routes/timeTrackingRoutes'); // Import the time tracking routes
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Logging middleware to capture the raw incoming request body
+
 
 // Load environment variables from .env file
 dotenv.config();
-
-// Initialize the Express app
-const app = express();
-
-// Middleware to parse JSON requests
-app.use(express.json());
 
 // Define a simple route to test the server
 app.get('/', (req, res) => {
@@ -30,7 +30,10 @@ app.use('/api/auth', authRoutes);
 // Register the project routes
 app.use('/api/projects', projectRoutes);
 
-app.use('/api/tasks', taskRoutes); // Register task routes
+// Register task routes
+app.use('/api/tasks', taskRoutes);
+
+app.use('/api/time-tracking', timeTrackingRoutes);
 
 // Set the port from environment variable or default to 5000
 const PORT = process.env.PORT || 5000;

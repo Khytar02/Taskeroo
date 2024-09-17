@@ -2,12 +2,21 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Project = require('./Project');
 const Task = require('./Task');
-
+const User = require('./User');
 const TimeEntry = sequelize.define('TimeEntry', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: false, // Ensure userId is not nullable
+    references: {
+      model: 'Users', // Ensure it refers to the correct Users table
+      key: 'id',
+    },
+    onDelete: 'CASCADE',
   },
   projectId: {
     type: DataTypes.INTEGER,

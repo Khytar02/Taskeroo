@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Project = require('./Project');
+const User = require('./User');  // Ensure the User model exists
 
 const Task = sequelize.define('Task', {
   id: {
@@ -10,11 +11,21 @@ const Task = sequelize.define('Task', {
   },
   projectId: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     references: {
       model: Project,
       key: 'id',
     },
-    allowNull: false,
+    onDelete: 'CASCADE',
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    allowNull: true,  // Allow userId to be null
+    references: {
+      model: User,
+      key: 'id',
+    },
+    onDelete: 'SET NULL',
   },
   name: {
     type: DataTypes.STRING,
